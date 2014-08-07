@@ -43,7 +43,11 @@ class Saml2Backend(ModelBackend):
             logger.error('"ava" key not found in session_info')
             return None
 
-        attributes = session_info['ava']
+        if 'name_id' in session_info:
+            attributes = dict(username=(session_info['name_id'].text,))
+        else:
+            attributes = session_info['ava']
+
         if not attributes:
             logger.error('The attributes dictionary is empty')
 
